@@ -1,0 +1,22 @@
+<h1>Lista de Usuarios</h1>
+
+<a href="{% url 'crear_usuario' %}">Crear usuario</a>
+
+<table border="1">
+    <tr>
+        <th>Nombre</th>
+        <th>Código</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for u in usuarios %}
+    <tr>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.codigo }}</td>
+        <td>
+            <a href="{% url 'editar_usuario' u.id %}">Editar</a> |
+            <a href="{% url 'eliminar_usuario' u.id %}">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

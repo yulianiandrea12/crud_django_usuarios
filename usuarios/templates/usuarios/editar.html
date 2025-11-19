@@ -1,0 +1,12 @@
+<h1>Editar Usuario</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label>Nombre:</label><br>
+    <input type="text" name="nombre" value="{{ usuario.nombre }}"><br><br>
+
+    <label>Código:</label><br>
+    <input type="text" name="codigo" value="{{ usuario.codigo }}"><br><br>
+
+    <button type="submit">Actualizar</button>
+</form>
