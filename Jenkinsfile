@@ -1,13 +1,9 @@
 pipeline {
     agent any
 
-    tools {
-        python 'Python3'
-        sonarQubeScanner 'sonar-scanner'
-    }
-
     environment {
-        SONARQUBE_ENV = credentials('sonarqube-token')
+        SONAR_HOST_URL = 'http://10.255.255.254:9000'
+        SONAR_LOGIN = credentials('sonarqube-token')
     }
 
     stages {
@@ -46,9 +42,8 @@ pipeline {
                     sonar-scanner \
                         -Dsonar.projectKey=crud_django \
                         -Dsonar.sources=. \
-                        -Dsonar.python.coverage.reportPaths=coverage.xml \
-                        -Dsonar.host.url=http://10.255.255.254:9000 \
-                        -Dsonar.login=$SONARQUBE_ENV
+                        -Dsonar.host.url=$SONAR_HOST_URL \
+                        -Dsonar.login=$SONAR_LOGIN
                     '''
                 }
             }
