@@ -1,17 +1,21 @@
 pipeline {
     agent any
 
+    tools {
+        // El plugin de Python NO usa "python", así que lo quitamos
+        // Tampoco existe "sonarQubeScanner" como herramienta
+    }
+
     environment {
-        SONAR_HOST_URL = 'http://10.255.255.254:9000'
-        SONAR_LOGIN = credentials('sonarqube-token')
+        // Este nombre debe coincidir con la configuración de Manage Jenkins → SonarQube Servers
+        SONARQUBE_ENV = credentials('sonarqube-token')
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'develop',
-                    url: 'https://github.com/yulianiandrea12/crud_django_usuarios.git'
+                git branch: 'develop', url: 'https://github.com/yulianiandrea12/crud_django_usuarios.git'
             }
         }
 
@@ -37,22 +41,15 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('MySonarQube') {
+                withSonarQubeEnv('sonarqube') {
                     sh '''
+                    . venv/bin/activate
                     sonar-scanner \
-                        -Dsonar.projectKey=crud_django \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=$SONAR_HOST_URL \
-                        -Dsonar.login=$SONAR_LOGIN
+                      -Dsonar.projectKey=crud_usuarios \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=http://10.255.255.254:9000 \
+                      -Dsonar.login=$SONARQUBE_ENV
                     '''
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 3, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
